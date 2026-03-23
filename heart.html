@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>❤️ 同步心跳 | 异地恋专属</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #ff9a9e 0%, #fad0c4 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255,255,240,0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 4rem;
+            padding: 2rem 1.5rem 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+
+        .hearts-panel {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .heart-card {
+            background: rgba(255,255,255,0.4);
+            border-radius: 3rem;
+            padding: 1.5rem 1rem;
+            width: 200px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .heart-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 1rem;
+            background: rgba(0,0,0,0.2);
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
+        }
+
+        .heart {
+            font-size: 8rem;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.2));
+        }
+
+        /* 跳动动画 */
+        .beat {
+            animation: heartBeat 0.3s ease-in-out 2;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+
+        .status {
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            color: #fff;
+        }
+
+        .online {
+            background: #4caf50;
+            box-shadow: 0 0 6px #4caf50;
+        }
+
+        .offline {
+            background: #9e9e9e;
+        }
+
+        .info {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #fff;
+            background: rgba(0,0,0,0.2);
+            padding: 0.5rem;
+            border-radius: 2rem;
+        }
+
+        button {
+            background: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 500px) {
+            .heart { font-size: 6rem; }
+            .heart-card { width: 160px; }
+            .container { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>💗 同步心跳 💗</h1>
+    <div class="hearts-panel">
+        <!-- 自己的心 -->
+        <div class="heart-card">
+            <div class="heart-name" id="myNameLabel">我</div>
+            <div class="heart" id="myHeart">❤️</div>
+            <div class="status" id="myStatus">连接中...</div>
+        </div>
+        <!-- 对方的心 -->
+        <div class="heart-card">
+            <div class="heart-name" id="partnerNameLabel">TA</div>
+            <div class="heart" id="partnerHeart">❤️</div>
+            <div class="status" id="partnerStatus">离线</div>
+        </div>
+    </div>
+    <div class="info">
+        ✨ 点击你的心，对方的心会跳动 ✨<br>
+        <button id="shakeBtn">📱 摇一摇触发心跳 (手机)</button>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+    // ========== 请替换为你的 Firebase 配置 ==========
+    const firebaseConfig = {
+        apiKey: "你的apiKey",
+        authDomain: "你的authDomain",
+        databaseURL: "你的databaseURL",  // 格式如 https://xxxx.firebaseio.com
+        projectId: "你的projectId",
+        storageBucket: "你的storageBucket",
+        messagingSenderId: "你的messagingSenderId",
+        appId: "你的appId"
+    };
+    // =============================================
+
+    // 初始化 Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ---------- 房间和身份设置 ----------
+    // 通过 URL 参数确定房间ID和用户角色（两人使用同一房间，不同角色）
+    // 例如：https://你的域名/index.html?room=love2025&user=her
+    // 约定：两人必须使用相同的 room，一人 user=me，另一人 user=you （或其他标识，但需约定）
+    const urlParams = new URLSearchParams(window.location.search);
+    let room = urlParams.get('room');
+    let myRole = urlParams.get('user');
+
+    if (!room) {
+        // 默认随机生成一个房间，方便测试，但正式使用请两人约定好房间名
+        room = "love_" + Math.random().toString(36).substr(2, 8);
+        console.warn("未指定房间，已自动生成:", room);
+        // 在地址栏显示房间号，方便分享
+        const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole || 'me'}`;
+        // 可选：不自动跳转，只是提醒
+        alert(`房间号未指定，已自动生成：${room}\n请告诉对方也使用此房间号。`);
+    }
+
+    if (!myRole) {
+        myRole = prompt("请输入你的身份（例如：me 或 you），对方需要输入另一个", "me");
+        if (!myRole) myRole = "me";
+        // 更新URL，方便刷新
+        const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole}`;
+        window.history.replaceState({}, "", newUrl);
+    }
+
+    // 约定对方的角色（简单起见，两个角色不同即可，比如 myRole = "me" 则 partnerRole = "you"）
+    const partnerRole = (myRole === "me") ? "you" : "me";
+
+    // 更新界面上的名称
+    document.getElementById("myNameLabel").innerText = (myRole === "me" ? "我" : myRole);
+    document.getElementById("partnerNameLabel").innerText = (partnerRole === "me" ? "我" : "TA");
+
+    // ---------- 数据库路径 ----------
+    const roomRef = db.ref(`heartbeat/${room}`);
+    const myHeartbeatRef = roomRef.child(`${myRole}/lastHeartbeat`);
+    const partnerHeartbeatRef = roomRef.child(`${partnerRole}/lastHeartbeat`);
+    const myOnlineRef = roomRef.child(`${myRole}/online`);
+    const partnerOnlineRef = roomRef.child(`${partnerRole}/online`);
+
+    // 心跳触发函数（本地点击后写入时间戳）
+    function sendHeartbeat() {
+        const now = Date.now();
+        myHeartbeatRef.set(now);
+        // 同时更新在线状态
+        myOnlineRef.set(true);
+        // 本地也给自己一个视觉反馈（轻微动画）
+        const myHeartEl = document.getElementById("myHeart");
+        myHeartEl.classList.add("beat");
+        setTimeout(() => myHeartEl.classList.remove("beat"), 400);
+    }
+
+    // 监听对方的心跳，让对方的心跳动
+    partnerHeartbeatRef.on('value', (snapshot) => {
+        const timestamp = snapshot.val();
+        if (timestamp) {
+            // 对方心跳了，让对方的心跳动画
+            const partnerHeartEl = document.getElementById("partnerHeart");
+            partnerHeartEl.classList.add("beat");
+            setTimeout(() => partnerHeartEl.classList.remove("beat"), 400);
+
+            // 可选：添加短暂的震动提示（手机支持）
+            if (navigator.vibrate) navigator.vibrate(100);
+        }
+    });
+
+    // 在线状态监听（对方在线状态）
+    partnerOnlineRef.on('value', (snapshot) => {
+        const isOnline = snapshot.val();
+        const partnerStatusEl = document.getElementById("partnerStatus");
+        if (isOnline === true) {
+            partnerStatusEl.innerText = "在线";
+            partnerStatusEl.className = "status online";
+        } else if (isOnline === false) {
+            partnerStatusEl.innerText = "离线";
+            partnerStatusEl.className = "status offline";
+        } else {
+            partnerStatusEl.innerText = "未连接";
+            partnerStatusEl.className = "status offline";
+        }
+    });
+
+    // 自己的在线状态保持：页面打开时设为true，页面关闭时设为false
+    function updateMyOnline(isOnline) {
+        myOnlineRef.set(isOnline);
+        if (isOnline) {
+            document.getElementById("myStatus").innerText = "在线";
+            document.getElementById("myStatus").className = "status online";
+        } else {
+            document.getElementById("myStatus").innerText = "离线";
+            document.getElementById("myStatus").className = "status offline";
+        }
+    }
+
+    // 页面加载时设为在线
+    updateMyOnline(true);
+    // 定期发送心跳（保持在线状态，例如每30秒发送一次心跳）
+    setInterval(() => {
+        if (document.visibilityState === "visible") {
+            myOnlineRef.set(true);
+            // 也可以顺便刷新一下心跳记录（可选）
+            // myHeartbeatRef.set(Date.now());
+        }
+    }, 30000);
+
+    // 监听页面关闭/刷新
+    window.addEventListener("beforeunload", () => {
+        updateMyOnline(false);
+    });
+
+    // 监听页面可见性变化（如果切换到后台，可以设为离线，但也可保持在线，看需求）
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+            updateMyOnline(true);
+        } else {
+            // 可选：页面隐藏时设为离线，但为了体验，不强制离线，因为可能只是切走一下
+            // 这里保持在线，但30秒后如果没有活跃会怎样？不用太严格
+        }
+    });
+
+    // 点击自己的心跳
+    document.getElementById("myHeart").addEventListener("click", sendHeartbeat);
+
+    // 摇一摇功能（手机）
+    let lastShake = 0;
+    function handleShake(event) {
+        // 加速度变化阈值
+        const acceleration = event.accelerationIncludingGravity;
+        if (!acceleration) return;
+        const curTime = new Date().getTime();
+        if ((curTime - lastShake) > 800) {  // 防抖
+            let x = acceleration.x;
+            let y = acceleration.y;
+            let z = acceleration.z;
+            let magnitude = Math.abs(x) + Math.abs(y) + Math.abs(z);
+            if (magnitude > 22) {  // 摇动阈值
+                lastShake = curTime;
+                sendHeartbeat();
+            }
+        }
+    }
+    if (window.DeviceMotionEvent) {
+        window.addEventListener("devicemotion", handleShake);
+    }
+    // 按钮手动触发摇一摇（方便没有陀螺仪的设备测试）
+    document.getElementById("shakeBtn").addEventListener("click", () => {
+        sendHeartbeat();
+    });
+</script>
+</body>
+</html>
