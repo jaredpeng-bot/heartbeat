@@ -164,7 +164,7 @@
             margin-top: 8px;
         }
 
-        /* 极简留言 */
+        /* 悄悄话区域（调整了顺序：消息在上，输入在下） */
         .message-box {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
@@ -175,6 +175,22 @@
             color: #fff;
             font-size: 15px;
             margin-bottom: 10px;
+        }
+
+        /* 消息列表在上 */
+        .msg-list {
+            max-height: 120px;
+            overflow-y: auto;
+            font-size: 13px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .msg-item {
+            background: rgba(255,255,255,0.08);
+            padding: 5px 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
         }
 
         #msgInput {
@@ -201,21 +217,6 @@
             border-radius: 15px;
             font-size: 13px;
             cursor: pointer;
-        }
-
-        .msg-list {
-            margin-top: 10px;
-            max-height: 100px;
-            overflow-y: auto;
-            font-size: 13px;
-            color: #fff;
-        }
-
-        .msg-item {
-            background: rgba(255,255,255,0.08);
-            padding: 5px 10px;
-            border-radius: 8px;
-            margin-bottom: 5px;
         }
 
         .tips {
@@ -255,9 +256,10 @@
 
         <div class="message-box">
             <div class="message-title">悄悄话</div>
+            <!-- 消息列表调整到输入框上方 -->
+            <div class="msg-list" id="msgList"></div>
             <input id="msgInput" placeholder="说点什么...">
             <button class="send-btn" id="sendMsg">发送</button>
-            <div class="msg-list" id="msgList"></div>
         </div>
 
         <div class="tips">点击爱心心动+1 · 实时同步</div>
@@ -266,7 +268,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script>
-        // Firebase 配置（保留你的配置）
+        // Firebase 配置（你的原配置，完全保留）
         const firebaseConfig = {
             apiKey: "AIzaSyAihhdwjaqMxNqsA2CAroY5v5sKaaLeM4c",
             authDomain: "we-are-together-c789f.firebaseapp.com",
@@ -278,27 +280,42 @@
             measurementId: "G-KLTF9MVX4T"
         };
 
+        // 初始化Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 核心配置（极简）
-        const u = new URLSearchParams(location.search).get("user");
-        const ME = u === "hyq" ? "hyq" : "pjh";
-        const TA = ME === "pjh" ? "hyq" : "pjh";
-        const ROOM = "love_hyq_pjh";
+        // ========== 核心修复1：身份校验，打开必须选身份 ==========
+        const urlParams = new URLSearchParams(location.search);
+        let ME = urlParams.get("user");
 
+        // 如果url里没有身份，弹出选择框，不允许直接进入
+        if (!ME || (ME !== "pjh" && ME !== "hyq")) {
+            ME = prompt("请选择你的身份（只能输入 pjh 或 hyq）", "pjh");
+            // 循环校验，必须输入正确的身份
+            while (!ME || (ME !== "pjh" && ME !== "hyq")) {
+                ME = prompt("输入错误！只能输入 pjh 或 hyq，请重新输入", "pjh");
+            }
+            // 把身份写入url，刷新也不会丢失
+            const newUrl = `${window.location.origin}${window.location.pathname}?user=${ME}`;
+            window.history.replaceState({}, "", newUrl);
+        }
+
+        // 固定对方身份
+        const TA = ME === "pjh" ? "hyq" : "pjh";
+        const ROOM = "love_hyq_pjh_final"; // 新的数据库路径，避免旧数据干扰
+
+        // 数据库引用
         const root = db.ref(`love_room/${ROOM}`);
         const meRef  = root.child(ME);
         const taRef  = root.child(TA);
         const global = root.child("global");
 
-        // 生日倒计时（3.24）
+        // ========== 生日显示（3.24） ==========
         function showAnniv() {
-            const BIRTH = new Date("2026-03-24"); // 固定生日3.24
+            const BIRTH = new Date("2026-03-24");
             const now = new Date();
             const diff = BIRTH - now;
             
-            // 生日当天/已过显示祝福
             if (diff <= 0) {
                 document.getElementById("anniversary").innerText = "🥳 宝贝生日快乐 · 岁岁年年";
                 return;
@@ -309,7 +326,7 @@
         }
         showAnniv();
 
-        // 在线状态（极简）
+        // ========== 在线状态 ==========
         function setOnline(v) {
             meRef.child("online").set(v);
             const el = document.getElementById("myStatus");
@@ -320,7 +337,7 @@
         window.onbeforeunload = () => setOnline(false);
         setInterval(() => document.visibilityState === "visible" && setOnline(true), 30000);
 
-        // 对方在线状态同步
+        // 对方在线状态监听
         taRef.child("online").on("value", s => {
             const v = s.val();
             const el = document.getElementById("taStatus");
@@ -328,18 +345,31 @@
             el.className = "status " + (v ? "online" : "");
         });
 
-        // 心动计数（极简）
+        // ========== 核心修复2：心动计数，打开就加载历史数据 ==========
         let myCount = 0, taCount = 0;
+        // 页面加载时，立即读取自己的心动值
+        meRef.child("heart").once("value", s => {
+            myCount = s.val() || 0;
+            document.getElementById("myCount").innerText = `心动：${myCount}`;
+        });
+        // 实时监听自己的心动值变化
         meRef.child("heart").on("value", s => {
             myCount = s.val() || 0;
             document.getElementById("myCount").innerText = `心动：${myCount}`;
         });
+
+        // 页面加载时，立即读取对方的心动值
+        taRef.child("heart").once("value", s => {
+            taCount = s.val() || 0;
+            document.getElementById("taCount").innerText = `心动：${taCount}`;
+        });
+        // 实时监听对方的心动值变化
         taRef.child("heart").on("value", s => {
             taCount = s.val() || 0;
             document.getElementById("taCount").innerText = `心动：${taCount}`;
         });
 
-        // +1 极简动画（无多余特效）
+        // +1 动画
         function plusOneAnimation(el) {
             const span = document.createElement("div");
             span.className = "plus-one";
@@ -348,12 +378,15 @@
             setTimeout(() => span.remove(), 800);
         }
 
-        // 点击爱心（核心交互）
+        // 点击爱心核心逻辑
         document.getElementById("myHeart").onclick = () => {
+            // 立即更新本地数值，避免网络延迟看不到变化
+            myCount += 1;
+            document.getElementById("myCount").innerText = `心动：${myCount}`;
             // +1 动画
             plusOneAnimation(document.getElementById("myHeart"));
-            // 同步计数
-            meRef.child("heart").set((myCount || 0) + 1);
+            // 同步到数据库
+            meRef.child("heart").set(myCount);
             meRef.child("lastBeat").set(Date.now());
             // 心跳动画
             const el = document.getElementById("myHeart");
@@ -367,29 +400,40 @@
             const el = document.getElementById("taHeart");
             el.classList.add("beat");
             setTimeout(() => el.classList.remove("beat"), 300);
-            // 轻微震动（可选）
+            // 手机震动反馈
             navigator.vibrate && navigator.vibrate(80);
         });
 
-        // 每日打卡（极简）
+        // ========== 核心修复3：打卡逻辑，打开就加载历史天数 ==========
         const today = new Date().toLocaleDateString();
-        document.getElementById("checkInBtn").onclick = () => {
-            global.child("lastCheckIn").once("value", s => {
-                if (s.val() === today) {
-                    alert("✅ 今日已打卡～");
-                    return;
-                }
-                global.child("checkInDays").transaction(v => (v || 0) + 1);
-                global.child("lastCheckIn").set(today);
-                alert("💖 打卡成功～");
-            });
-        };
+        // 页面加载时，立即读取累计打卡天数
+        global.child("checkInDays").once("value", s => {
+            const days = s.val() || 0;
+            document.getElementById("checkInRecord").innerText = `累计打卡：${days} 天`;
+        });
+        // 实时监听打卡天数变化
         global.child("checkInDays").on("value", s => {
-            const v = s.val() || 0;
-            document.getElementById("checkInRecord").innerText = `累计打卡：${v} 天`;
+            const days = s.val() || 0;
+            document.getElementById("checkInRecord").innerText = `累计打卡：${days} 天`;
         });
 
-        // 极简留言
+        // 打卡按钮点击逻辑
+        document.getElementById("checkInBtn").onclick = () => {
+            global.child("lastCheckIn").once("value", s => {
+                const lastCheckIn = s.val();
+                if (lastCheckIn === today) {
+                    alert("✅ 今日已打卡，明天再来吧～");
+                    return;
+                }
+                // 打卡成功，更新天数和最后打卡日期
+                global.child("checkInDays").transaction(v => (v || 0) + 1);
+                global.child("lastCheckIn").set(today);
+                alert("💖 打卡成功！又是想你的一天～");
+            });
+        };
+
+        // ========== 悄悄话逻辑，加载历史消息 ==========
+        // 发送消息
         document.getElementById("sendMsg").onclick = () => {
             const text = document.getElementById("msgInput").value.trim();
             if (!text) return;
@@ -400,13 +444,19 @@
             });
             document.getElementById("msgInput").value = "";
         };
+        // 回车发送
+        document.getElementById("msgInput").addEventListener("keydown", e => {
+            if (e.key === "Enter") document.getElementById("sendMsg").click();
+        });
+        // 加载历史消息+监听新消息
         global.child("messages").on("child_added", s => {
             const data = s.val();
             const item = document.createElement("div");
             item.className = "msg-item";
             item.innerText = `${data.name}：${data.text}`;
             document.getElementById("msgList").appendChild(item);
-            document.getElementById("msgList").scrollTop = 9999;
+            // 自动滚动到最新消息
+            document.getElementById("msgList").scrollTop = document.getElementById("msgList").scrollHeight;
         });
     </script>
 </body>
