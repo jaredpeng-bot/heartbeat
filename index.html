@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>❤️ 同步心跳 | 异地恋专属</title>
+    <title>❤️ 同步心跳 | pjh & hyq 专属</title>
     <style>
         * {
             margin: 0;
@@ -138,17 +138,17 @@
 </head>
 <body>
 <div class="container">
-    <h1>💗 同步心跳 💗</h1>
+    <h1>💗 pjh & hyq 同步心跳 💗</h1>
     <div class="hearts-panel">
         <!-- 自己的心 -->
         <div class="heart-card">
-            <div class="heart-name" id="myNameLabel">我</div>
+            <div class="heart-name" id="myNameLabel">加载中...</div>
             <div class="heart" id="myHeart">❤️</div>
             <div class="status" id="myStatus">连接中...</div>
         </div>
         <!-- 对方的心 -->
         <div class="heart-card">
-            <div class="heart-name" id="partnerNameLabel">TA</div>
+            <div class="heart-name" id="partnerNameLabel">加载中...</div>
             <div class="heart" id="partnerHeart">❤️</div>
             <div class="status" id="partnerStatus">离线</div>
         </div>
@@ -164,54 +164,55 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
-    // ========== 请替换为你的 Firebase 配置 ==========
-    const firebaseConfig = {
-        apiKey: "你的apiKey",
-        authDomain: "你的authDomain",
-        databaseURL: "你的databaseURL",  // 格式如 https://xxxx.firebaseio.com
-        projectId: "你的projectId",
-        storageBucket: "你的storageBucket",
-        messagingSenderId: "你的messagingSenderId",
-        appId: "你的appId"
-    };
+    // ========== 你的 Firebase 配置（已保留） ==========
+  const firebaseConfig = {
+    apiKey: "AIzaSyAihhdwjaqMxNqsA2CAroY5v5sKaaLeM4c",
+    authDomain: "we-are-together-c789f.firebaseapp.com",
+    databaseURL: "https://we-are-together-c789f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "we-are-together-c789f",
+    storageBucket: "we-are-together-c789f.firebasestorage.app",
+    messagingSenderId: "798844688328",
+    appId: "1:798844688328:web:a2d77e2500a3aa1214d2fd",
+    measurementId: "G-KLTF9MVX4T"
+  };
     // =============================================
 
     // 初始化 Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // ---------- 房间和身份设置 ----------
-    // 通过 URL 参数确定房间ID和用户角色（两人使用同一房间，不同角色）
-    // 例如：https://你的域名/index.html?room=love2025&user=her
-    // 约定：两人必须使用相同的 room，一人 user=me，另一人 user=you （或其他标识，但需约定）
+    // ---------- 房间和身份设置（固定为pjh/hyq） ----------
+    // 约定：你 = pjh，对方 = hyq；两人用同一个房间号即可
     const urlParams = new URLSearchParams(window.location.search);
     let room = urlParams.get('room');
     let myRole = urlParams.get('user');
 
+    // 1. 固定房间号（避免随机生成，建议改成你们的专属房间名）
     if (!room) {
-        // 默认随机生成一个房间，方便测试，但正式使用请两人约定好房间名
-        room = "love_" + Math.random().toString(36).substr(2, 8);
-        console.warn("未指定房间，已自动生成:", room);
-        // 在地址栏显示房间号，方便分享
-        const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole || 'me'}`;
-        // 可选：不自动跳转，只是提醒
-        alert(`房间号未指定，已自动生成：${room}\n请告诉对方也使用此房间号。`);
+        room = "pjh_hyq_forever"; // 你们的专属房间号，可自定义
+        // 更新URL，方便分享
+        const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole || 'pjh'}`;
+        window.history.replaceState({}, "", newUrl);
     }
 
-    if (!myRole) {
-        myRole = prompt("请输入你的身份（例如：me 或 you），对方需要输入另一个", "me");
-        if (!myRole) myRole = "me";
-        // 更新URL，方便刷新
+    // 2. 身份只能是pjh或hyq，不允许其他值
+    if (!myRole || (myRole !== "pjh" && myRole !== "hyq")) {
+        myRole = prompt("请输入你的身份（只能填 pjh 或 hyq）", "pjh");
+        // 校验输入，确保只能是pjh/hyq
+        while (!myRole || (myRole !== "pjh" && myRole !== "hyq")) {
+            myRole = prompt("输入错误！只能填 pjh 或 hyq，请重新输入", "pjh");
+        }
+        // 更新URL
         const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole}`;
         window.history.replaceState({}, "", newUrl);
     }
 
-    // 约定对方的角色（简单起见，两个角色不同即可，比如 myRole = "me" 则 partnerRole = "you"）
-    const partnerRole = (myRole === "me") ? "you" : "me";
+    // 3. 固定对方身份：pjh ↔ hyq
+    const partnerRole = (myRole === "pjh") ? "hyq" : "pjh";
 
-    // 更新界面上的名称
-    document.getElementById("myNameLabel").innerText = (myRole === "me" ? "我" : myRole);
-    document.getElementById("partnerNameLabel").innerText = (partnerRole === "me" ? "我" : "TA");
+    // 4. 更新界面显示的名字（直接显示pjh/hyq，不再显示“我/TA”）
+    document.getElementById("myNameLabel").innerText = myRole;
+    document.getElementById("partnerNameLabel").innerText = partnerRole;
 
     // ---------- 数据库路径 ----------
     const roomRef = db.ref(`heartbeat/${room}`);
@@ -280,8 +281,6 @@
     setInterval(() => {
         if (document.visibilityState === "visible") {
             myOnlineRef.set(true);
-            // 也可以顺便刷新一下心跳记录（可选）
-            // myHeartbeatRef.set(Date.now());
         }
     }, 30000);
 
@@ -290,13 +289,10 @@
         updateMyOnline(false);
     });
 
-    // 监听页面可见性变化（如果切换到后台，可以设为离线，但也可保持在线，看需求）
+    // 监听页面可见性变化
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
             updateMyOnline(true);
-        } else {
-            // 可选：页面隐藏时设为离线，但为了体验，不强制离线，因为可能只是切走一下
-            // 这里保持在线，但30秒后如果没有活跃会怎样？不用太严格
         }
     });
 
@@ -306,16 +302,15 @@
     // 摇一摇功能（手机）
     let lastShake = 0;
     function handleShake(event) {
-        // 加速度变化阈值
         const acceleration = event.accelerationIncludingGravity;
         if (!acceleration) return;
         const curTime = new Date().getTime();
-        if ((curTime - lastShake) > 800) {  // 防抖
+        if ((curTime - lastShake) > 800) {
             let x = acceleration.x;
             let y = acceleration.y;
             let z = acceleration.z;
             let magnitude = Math.abs(x) + Math.abs(y) + Math.abs(z);
-            if (magnitude > 22) {  // 摇动阈值
+            if (magnitude > 22) {
                 lastShake = curTime;
                 sendHeartbeat();
             }
@@ -324,7 +319,7 @@
     if (window.DeviceMotionEvent) {
         window.addEventListener("devicemotion", handleShake);
     }
-    // 按钮手动触发摇一摇（方便没有陀螺仪的设备测试）
+    // 按钮手动触发摇一摇
     document.getElementById("shakeBtn").addEventListener("click", () => {
         sendHeartbeat();
     });
