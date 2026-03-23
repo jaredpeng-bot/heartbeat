@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>❤️ 同步心跳 | pjh & hyq 专属</title>
+    <title>❤️ pjh & hyq 同步心跳 | 异地恋专属</title>
     <style>
         * {
             margin: 0;
@@ -20,25 +20,30 @@
             align-items: center;
             font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
             padding: 1rem;
+            overflow: hidden;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             width: 100%;
             background: rgba(255,255,240,0.2);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
             border-radius: 4rem;
-            padding: 2rem 1.5rem 2.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            padding: 3rem 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             text-align: center;
         }
 
         h1 {
-            font-size: 2rem;
-            letter-spacing: 2px;
+            font-size: 2.2rem;
+            letter-spacing: 3px;
             color: #fff;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-bottom: 1rem;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+            background: rgba(255, 105, 180, 0.3);
+            padding: 0.8rem 2rem;
+            border-radius: 2rem;
+            display: inline-block;
         }
 
         .hearts-panel {
@@ -46,62 +51,79 @@
             justify-content: space-around;
             align-items: center;
             flex-wrap: wrap;
-            gap: 2rem;
+            gap: 3rem;
             margin: 2rem 0;
         }
 
         .heart-card {
             background: rgba(255,255,255,0.4);
             border-radius: 3rem;
-            padding: 1.5rem 1rem;
-            width: 200px;
+            padding: 2rem 1.5rem;
+            width: 220px;
             text-align: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .heart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
         }
 
         .heart-name {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: #fff;
-            margin-bottom: 1rem;
-            background: rgba(0,0,0,0.2);
+            margin-bottom: 1.5rem;
+            background: rgba(255, 105, 180, 0.5);
             display: inline-block;
-            padding: 0.2rem 1rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        /* 3D爱心样式 + 跳动动画 */
         .heart {
-            font-size: 8rem;
+            font-size: 9rem;
             cursor: pointer;
             display: inline-block;
-            transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
-            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            transition: all 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
+            transform-style: preserve-3d;
+            animation: float 3s ease-in-out infinite;
         }
 
-        /* 跳动动画 */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        /* 点击跳动动画 */
         .beat {
-            animation: heartBeat 0.3s ease-in-out 2;
+            animation: heartBeat 0.4s ease-in-out 2, float 3s ease-in-out infinite;
         }
 
         @keyframes heartBeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.4); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.5) rotate(3deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
 
         .status {
-            margin-top: 0.8rem;
-            font-size: 0.8rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
             background: rgba(0,0,0,0.3);
             display: inline-block;
-            padding: 0.2rem 0.8rem;
+            padding: 0.3rem 1rem;
             border-radius: 2rem;
             color: #fff;
+            font-weight: 500;
         }
 
         .online {
             background: #4caf50;
-            box-shadow: 0 0 6px #4caf50;
+            box-shadow: 0 0 8px #4caf50;
         }
 
         .offline {
@@ -109,30 +131,40 @@
         }
 
         .info {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
+            margin-top: 2rem;
+            font-size: 1rem;
             color: #fff;
-            background: rgba(0,0,0,0.2);
-            padding: 0.5rem;
+            background: rgba(255, 105, 180, 0.3);
+            padding: 0.8rem 1.2rem;
             border-radius: 2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.6;
         }
 
         button {
             background: #fff;
             border: none;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 2rem;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: bold;
-            margin-top: 0.5rem;
+            margin-top: 1rem;
             cursor: pointer;
             color: #ff6b6b;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
         }
 
-        @media (max-width: 500px) {
-            .heart { font-size: 6rem; }
-            .heart-card { width: 160px; }
-            .container { padding: 1.5rem; }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 600px) {
+            .heart { font-size: 7rem; }
+            .heart-card { width: 180px; padding: 1.5rem 1rem; }
+            .container { padding: 2rem 1.5rem; }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -154,7 +186,7 @@
         </div>
     </div>
     <div class="info">
-        ✨ 点击你的心，对方的心会跳动 ✨<br>
+        ✨ 点击你的心，对方的心会同步跳动 ✨<br>
         <button id="shakeBtn">📱 摇一摇触发心跳 (手机)</button>
     </div>
 </div>
@@ -165,164 +197,151 @@
 
 <script>
     // ========== 你的 Firebase 配置（已保留） ==========
-  const firebaseConfig = {
-    apiKey: "AIzaSyAihhdwjaqMxNqsA2CAroY5v5sKaaLeM4c",
-    authDomain: "we-are-together-c789f.firebaseapp.com",
-    databaseURL: "https://we-are-together-c789f-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "we-are-together-c789f",
-    storageBucket: "we-are-together-c789f.firebasestorage.app",
-    messagingSenderId: "798844688328",
-    appId: "1:798844688328:web:a2d77e2500a3aa1214d2fd",
-    measurementId: "G-KLTF9MVX4T"
-  };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAihhdwjaqMxNqsA2CAroY5v5sKaaLeM4c",
+        authDomain: "we-are-together-c789f.firebaseapp.com",
+        databaseURL: "https://we-are-together-c789f-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "we-are-together-c789f",
+        storageBucket: "we-are-together-c789f.firebasestorage.app",
+        messagingSenderId: "798844688328",
+        appId: "1:798844688328:web:a2d77e2500a3aa1214d2fd",
+        measurementId: "G-KLTF9MVX4T"
+    };
     // =============================================
 
     // 初始化 Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    try {
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-    // ---------- 房间和身份设置（固定为pjh/hyq） ----------
-    // 约定：你 = pjh，对方 = hyq；两人用同一个房间号即可
-    const urlParams = new URLSearchParams(window.location.search);
-    let room = urlParams.get('room');
-    let myRole = urlParams.get('user');
+        // ---------- 房间和身份设置（固定为pjh/hyq） ----------
+        const urlParams = new URLSearchParams(window.location.search);
+        let room = urlParams.get('room');
+        let myRole = urlParams.get('user');
 
-    // 1. 固定房间号（避免随机生成，建议改成你们的专属房间名）
-    if (!room) {
-        room = "pjh_hyq_forever"; // 你们的专属房间号，可自定义
-        // 更新URL，方便分享
-        const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole || 'pjh'}`;
-        window.history.replaceState({}, "", newUrl);
-    }
-
-    // 2. 身份只能是pjh或hyq，不允许其他值
-    if (!myRole || (myRole !== "pjh" && myRole !== "hyq")) {
-        myRole = prompt("请输入你的身份（只能填 pjh 或 hyq）", "pjh");
-        // 校验输入，确保只能是pjh/hyq
-        while (!myRole || (myRole !== "pjh" && myRole !== "hyq")) {
-            myRole = prompt("输入错误！只能填 pjh 或 hyq，请重新输入", "pjh");
+        // 1. 固定专属房间号
+        if (!room) {
+            room = "pjh_hyq_forever";
+            const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole || 'pjh'}`;
+            window.history.replaceState({}, "", newUrl);
         }
-        // 更新URL
-        const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole}`;
-        window.history.replaceState({}, "", newUrl);
-    }
 
-    // 3. 固定对方身份：pjh ↔ hyq
-    const partnerRole = (myRole === "pjh") ? "hyq" : "pjh";
-
-    // 4. 更新界面显示的名字（直接显示pjh/hyq，不再显示“我/TA”）
-    document.getElementById("myNameLabel").innerText = myRole;
-    document.getElementById("partnerNameLabel").innerText = partnerRole;
-
-    // ---------- 数据库路径 ----------
-    const roomRef = db.ref(`heartbeat/${room}`);
-    const myHeartbeatRef = roomRef.child(`${myRole}/lastHeartbeat`);
-    const partnerHeartbeatRef = roomRef.child(`${partnerRole}/lastHeartbeat`);
-    const myOnlineRef = roomRef.child(`${myRole}/online`);
-    const partnerOnlineRef = roomRef.child(`${partnerRole}/online`);
-
-    // 心跳触发函数（本地点击后写入时间戳）
-    function sendHeartbeat() {
-        const now = Date.now();
-        myHeartbeatRef.set(now);
-        // 同时更新在线状态
-        myOnlineRef.set(true);
-        // 本地也给自己一个视觉反馈（轻微动画）
-        const myHeartEl = document.getElementById("myHeart");
-        myHeartEl.classList.add("beat");
-        setTimeout(() => myHeartEl.classList.remove("beat"), 400);
-    }
-
-    // 监听对方的心跳，让对方的心跳动
-    partnerHeartbeatRef.on('value', (snapshot) => {
-        const timestamp = snapshot.val();
-        if (timestamp) {
-            // 对方心跳了，让对方的心跳动画
-            const partnerHeartEl = document.getElementById("partnerHeart");
-            partnerHeartEl.classList.add("beat");
-            setTimeout(() => partnerHeartEl.classList.remove("beat"), 400);
-
-            // 可选：添加短暂的震动提示（手机支持）
-            if (navigator.vibrate) navigator.vibrate(100);
+        // 2. 身份校验（只能是pjh/hyq）
+        if (!myRole || (myRole !== "pjh" && myRole !== "hyq")) {
+            myRole = prompt("💗 请输入你的身份（只能填 pjh 或 hyq）", "pjh");
+            while (!myRole || (myRole !== "pjh" && myRole !== "hyq")) {
+                myRole = prompt("❌ 输入错误！只能填 pjh 或 hyq，请重新输入", "pjh");
+            }
+            const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole}`;
+            window.history.replaceState({}, "", newUrl);
         }
-    });
 
-    // 在线状态监听（对方在线状态）
-    partnerOnlineRef.on('value', (snapshot) => {
-        const isOnline = snapshot.val();
-        const partnerStatusEl = document.getElementById("partnerStatus");
-        if (isOnline === true) {
-            partnerStatusEl.innerText = "在线";
-            partnerStatusEl.className = "status online";
-        } else if (isOnline === false) {
-            partnerStatusEl.innerText = "离线";
-            partnerStatusEl.className = "status offline";
-        } else {
-            partnerStatusEl.innerText = "未连接";
-            partnerStatusEl.className = "status offline";
-        }
-    });
+        // 3. 固定对方身份
+        const partnerRole = (myRole === "pjh") ? "hyq" : "pjh";
 
-    // 自己的在线状态保持：页面打开时设为true，页面关闭时设为false
-    function updateMyOnline(isOnline) {
-        myOnlineRef.set(isOnline);
-        if (isOnline) {
-            document.getElementById("myStatus").innerText = "在线";
-            document.getElementById("myStatus").className = "status online";
-        } else {
-            document.getElementById("myStatus").innerText = "离线";
-            document.getElementById("myStatus").className = "status offline";
-        }
-    }
+        // 4. 更新界面名称
+        document.getElementById("myNameLabel").innerText = myRole;
+        document.getElementById("partnerNameLabel").innerText = partnerRole;
 
-    // 页面加载时设为在线
-    updateMyOnline(true);
-    // 定期发送心跳（保持在线状态，例如每30秒发送一次心跳）
-    setInterval(() => {
-        if (document.visibilityState === "visible") {
+        // ---------- 数据库路径 ----------
+        const roomRef = db.ref(`heartbeat/${room}`);
+        const myHeartbeatRef = roomRef.child(`${myRole}/lastHeartbeat`);
+        const partnerHeartbeatRef = roomRef.child(`${partnerRole}/lastHeartbeat`);
+        const myOnlineRef = roomRef.child(`${myRole}/online`);
+        const partnerOnlineRef = roomRef.child(`${partnerRole}/online`);
+
+        // ---------- 核心交互逻辑 ----------
+        // 心跳触发函数
+        function sendHeartbeat() {
+            const now = Date.now();
+            myHeartbeatRef.set(now);
             myOnlineRef.set(true);
+            
+            // 本地视觉反馈
+            const myHeartEl = document.getElementById("myHeart");
+            myHeartEl.classList.add("beat");
+            setTimeout(() => myHeartEl.classList.remove("beat"), 800);
         }
-    }, 30000);
 
-    // 监听页面关闭/刷新
-    window.addEventListener("beforeunload", () => {
-        updateMyOnline(false);
-    });
+        // 监听对方心跳
+        partnerHeartbeatRef.on('value', (snapshot) => {
+            const timestamp = snapshot.val();
+            if (timestamp && Date.now() - timestamp < 2000) { // 防止旧数据触发
+                const partnerHeartEl = document.getElementById("partnerHeart");
+                partnerHeartEl.classList.add("beat");
+                setTimeout(() => partnerHeartEl.classList.remove("beat"), 800);
+                
+                // 手机震动提示
+                if (navigator.vibrate) navigator.vibrate(150);
+            }
+        });
 
-    // 监听页面可见性变化
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible") {
-            updateMyOnline(true);
-        }
-    });
+        // 在线状态监听
+        partnerOnlineRef.on('value', (snapshot) => {
+            const isOnline = snapshot.val();
+            const partnerStatusEl = document.getElementById("partnerStatus");
+            if (isOnline === true) {
+                partnerStatusEl.innerText = "在线 ❤️";
+                partnerStatusEl.className = "status online";
+            } else {
+                partnerStatusEl.innerText = "离线 💔";
+                partnerStatusEl.className = "status offline";
+            }
+        });
 
-    // 点击自己的心跳
-    document.getElementById("myHeart").addEventListener("click", sendHeartbeat);
-
-    // 摇一摇功能（手机）
-    let lastShake = 0;
-    function handleShake(event) {
-        const acceleration = event.accelerationIncludingGravity;
-        if (!acceleration) return;
-        const curTime = new Date().getTime();
-        if ((curTime - lastShake) > 800) {
-            let x = acceleration.x;
-            let y = acceleration.y;
-            let z = acceleration.z;
-            let magnitude = Math.abs(x) + Math.abs(y) + Math.abs(z);
-            if (magnitude > 22) {
-                lastShake = curTime;
-                sendHeartbeat();
+        // 保持自己在线
+        function updateMyOnline(isOnline) {
+            myOnlineRef.set(isOnline);
+            const myStatusEl = document.getElementById("myStatus");
+            if (isOnline) {
+                myStatusEl.innerText = "在线 ❤️";
+                myStatusEl.className = "status online";
+            } else {
+                myStatusEl.innerText = "离线 💔";
+                myStatusEl.className = "status offline";
             }
         }
+
+        // 页面加载设为在线
+        updateMyOnline(true);
+        setInterval(() => {
+            if (document.visibilityState === "visible") updateMyOnline(true);
+        }, 30000);
+
+        // 页面关闭设为离线
+        window.addEventListener("beforeunload", () => updateMyOnline(false));
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") updateMyOnline(true);
+        });
+
+        // 点击爱心触发
+        document.getElementById("myHeart").addEventListener("click", sendHeartbeat);
+
+        // 摇一摇功能
+        let lastShake = 0;
+        function handleShake(event) {
+            const acceleration = event.accelerationIncludingGravity;
+            if (!acceleration) return;
+            const curTime = Date.now();
+            if ((curTime - lastShake) > 800) {
+                const magnitude = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
+                if (magnitude > 22) {
+                    lastShake = curTime;
+                    sendHeartbeat();
+                }
+            }
+        }
+        if (window.DeviceMotionEvent) {
+            window.addEventListener("devicemotion", handleShake);
+        }
+
+        // 摇一摇按钮触发
+        document.getElementById("shakeBtn").addEventListener("click", sendHeartbeat);
+
+    } catch (e) {
+        alert(`💔 初始化失败：${e.message}\n请检查Firebase配置是否正确`);
+        console.error("Firebase初始化错误：", e);
     }
-    if (window.DeviceMotionEvent) {
-        window.addEventListener("devicemotion", handleShake);
-    }
-    // 按钮手动触发摇一摇
-    document.getElementById("shakeBtn").addEventListener("click", () => {
-        sendHeartbeat();
-    });
 </script>
 </body>
 </html>
