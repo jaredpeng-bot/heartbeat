@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>❤️ pjh & hyq 同步心跳 | 异地恋专属</title>
+    <title>hyq&pjh · 心跳同频</title>
     <style>
         * {
             margin: 0;
@@ -14,334 +14,400 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(145deg, #ff9a9e 0%, #fad0c4 100%);
+            background: linear-gradient(140deg, #ff9a9e 0%, #fad0c4 100%);
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
-            padding: 1rem;
-            overflow: hidden;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 600px;
             width: 100%;
-            background: rgba(255,255,240,0.2);
+            background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(8px);
-            border-radius: 4rem;
-            padding: 3rem 2rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* 标题 */
+        .title {
             text-align: center;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            letter-spacing: 3px;
             color: #fff;
-            text-shadow: 0 3px 6px rgba(0,0,0,0.2);
-            margin-bottom: 2rem;
-            background: rgba(255, 105, 180, 0.3);
-            padding: 0.8rem 2rem;
-            border-radius: 2rem;
-            display: inline-block;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
         }
 
-        .hearts-panel {
+        /* 生日倒计时 */
+        .anniversary {
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            background: rgba(255, 60, 110, 0.15);
+            padding: 8px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* 爱心区域 */
+        .heart-row {
             display: flex;
             justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 3rem;
-            margin: 2rem 0;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        .heart-card {
-            background: rgba(255,255,255,0.4);
-            border-radius: 3rem;
-            padding: 2rem 1.5rem;
-            width: 220px;
+        .heart-box {
             text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            flex: 1;
         }
 
-        .heart-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
-        }
-
-        .heart-name {
-            font-size: 1.4rem;
-            font-weight: bold;
+        .name-tag {
             color: #fff;
-            margin-bottom: 1.5rem;
-            background: rgba(255, 105, 180, 0.5);
-            display: inline-block;
-            padding: 0.4rem 1.2rem;
-            border-radius: 2rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* 3D爱心样式 + 跳动动画 */
-        .heart {
-            font-size: 9rem;
-            cursor: pointer;
-            display: inline-block;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
-            transition: all 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
-            transform-style: preserve-3d;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-
-        /* 点击跳动动画 */
-        .beat {
-            animation: heartBeat 0.4s ease-in-out 2, float 3s ease-in-out infinite;
-        }
-
-        @keyframes heartBeat {
-            0% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.5) rotate(3deg); }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-
-        .status {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            background: rgba(0,0,0,0.3);
-            display: inline-block;
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            color: #fff;
+            font-size: 16px;
+            margin-bottom: 10px;
             font-weight: 500;
         }
 
-        .online {
-            background: #4caf50;
-            box-shadow: 0 0 8px #4caf50;
-        }
-
-        .offline {
-            background: #9e9e9e;
-        }
-
-        .info {
-            margin-top: 2rem;
-            font-size: 1rem;
-            color: #fff;
-            background: rgba(255, 105, 180, 0.3);
-            padding: 0.8rem 1.2rem;
-            border-radius: 2rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            line-height: 1.6;
-        }
-
-        button {
-            background: #fff;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 2rem;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-top: 1rem;
+        .heart {
+            font-size: 70px;
             cursor: pointer;
-            color: #ff6b6b;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: all 0.2s ease;
+            position: relative;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        /* 核心心跳动画（极简） */
+        .beat {
+            animation: beat 0.3s ease-in-out;
         }
 
-        @media (max-width: 600px) {
-            .heart { font-size: 7rem; }
-            .heart-card { width: 180px; padding: 1.5rem 1rem; }
-            .container { padding: 2rem 1.5rem; }
-            h1 { font-size: 1.8rem; }
+        @keyframes beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        /* +1 极简上浮 */
+        .plus-one {
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            font-size: 18px;
+            color: #ff3366;
+            font-weight: bold;
+            animation: plusOne 0.8s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes plusOne {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        .count {
+            color: #fff;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .status {
+            font-size: 12px;
+            color: #fff;
+            background: rgba(0,0,0,0.15);
+            padding: 2px 8px;
+            border-radius: 8px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .status.online {
+            background: #22c55e;
+        }
+
+        /* 打卡区域（极简） */
+        .checkin-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .checkin-title {
+            color: #fff;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .checkin-btn {
+            background: #ff4d7a;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .checkin-btn:active {
+            transform: scale(0.95);
+        }
+
+        .checkin-record {
+            color: #fff;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* 极简留言 */
+        .message-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .message-title {
+            color: #fff;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        #msgInput {
+            width: 100%;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 8px;
+        }
+
+        #msgInput::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .send-btn {
+            background: #ff8da1;
+            color: #fff;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .msg-list {
+            margin-top: 10px;
+            max-height: 100px;
+            overflow-y: auto;
+            font-size: 13px;
+            color: #fff;
+        }
+
+        .msg-item {
+            background: rgba(255,255,255,0.08);
+            padding: 5px 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .tips {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            margin-top: 12px;
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <h1>💗 pjh & hyq 同步心跳 💗</h1>
-    <div class="hearts-panel">
-        <!-- 自己的心 -->
-        <div class="heart-card">
-            <div class="heart-name" id="myNameLabel">加载中...</div>
-            <div class="heart" id="myHeart">❤️</div>
-            <div class="status" id="myStatus">连接中...</div>
+    <div class="container">
+        <div class="title">hyq&pjh · 心跳同频</div>
+        <div class="anniversary" id="anniversary"></div>
+
+        <div class="heart-row">
+            <div class="heart-box">
+                <div class="name-tag">pjh · 我</div>
+                <div class="heart" id="myHeart">❤️</div>
+                <div class="count" id="myCount">心动：0</div>
+                <div class="status" id="myStatus">连接中</div>
+            </div>
+            <div class="heart-box">
+                <div class="name-tag">hyq · 宝贝</div>
+                <div class="heart" id="taHeart">❤️</div>
+                <div class="count" id="taCount">心动：0</div>
+                <div class="status" id="taStatus">离线</div>
+            </div>
         </div>
-        <!-- 对方的心 -->
-        <div class="heart-card">
-            <div class="heart-name" id="partnerNameLabel">加载中...</div>
-            <div class="heart" id="partnerHeart">❤️</div>
-            <div class="status" id="partnerStatus">离线</div>
+
+        <div class="checkin-box">
+            <div class="checkin-title">每日打卡 · 想你</div>
+            <button class="checkin-btn" id="checkInBtn">今日打卡</button>
+            <div class="checkin-record" id="checkInRecord">累计打卡：0 天</div>
         </div>
+
+        <div class="message-box">
+            <div class="message-title">悄悄话</div>
+            <input id="msgInput" placeholder="说点什么...">
+            <button class="send-btn" id="sendMsg">发送</button>
+            <div class="msg-list" id="msgList"></div>
+        </div>
+
+        <div class="tips">点击爱心心动+1 · 实时同步</div>
     </div>
-    <div class="info">
-        ✨ 点击你的心，对方的心会同步跳动 ✨<br>
-        <button id="shakeBtn">📱 摇一摇触发心跳 (手机)</button>
-    </div>
-</div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script>
+        // Firebase 配置（保留你的配置）
+        const firebaseConfig = {
+            apiKey: "AIzaSyAihhdwjaqMxNqsA2CAroY5v5sKaaLeM4c",
+            authDomain: "we-are-together-c789f.firebaseapp.com",
+            databaseURL: "https://we-are-together-c789f-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "we-are-together-c789f",
+            storageBucket: "we-are-together-c789f.firebasestorage.app",
+            messagingSenderId: "798844688328",
+            appId: "1:798844688328:web:a2d77e2500a3aa1214d2fd",
+            measurementId: "G-KLTF9MVX4T"
+        };
 
-<script>
-    // ========== 你的 Firebase 配置（已保留） ==========
-    const firebaseConfig = {
-        apiKey: "AIzaSyAihhdwjaqMxNqsA2CAroY5v5sKaaLeM4c",
-        authDomain: "we-are-together-c789f.firebaseapp.com",
-        databaseURL: "https://we-are-together-c789f-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "we-are-together-c789f",
-        storageBucket: "we-are-together-c789f.firebasestorage.app",
-        messagingSenderId: "798844688328",
-        appId: "1:798844688328:web:a2d77e2500a3aa1214d2fd",
-        measurementId: "G-KLTF9MVX4T"
-    };
-    // =============================================
-
-    // 初始化 Firebase
-    try {
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // ---------- 房间和身份设置（固定为pjh/hyq） ----------
-        const urlParams = new URLSearchParams(window.location.search);
-        let room = urlParams.get('room');
-        let myRole = urlParams.get('user');
+        // 核心配置（极简）
+        const u = new URLSearchParams(location.search).get("user");
+        const ME = u === "hyq" ? "hyq" : "pjh";
+        const TA = ME === "pjh" ? "hyq" : "pjh";
+        const ROOM = "love_hyq_pjh";
 
-        // 1. 固定专属房间号
-        if (!room) {
-            room = "pjh_hyq_forever";
-            const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole || 'pjh'}`;
-            window.history.replaceState({}, "", newUrl);
-        }
+        const root = db.ref(`love_room/${ROOM}`);
+        const meRef  = root.child(ME);
+        const taRef  = root.child(TA);
+        const global = root.child("global");
 
-        // 2. 身份校验（只能是pjh/hyq）
-        if (!myRole || (myRole !== "pjh" && myRole !== "hyq")) {
-            myRole = prompt("💗 请输入你的身份（只能填 pjh 或 hyq）", "pjh");
-            while (!myRole || (myRole !== "pjh" && myRole !== "hyq")) {
-                myRole = prompt("❌ 输入错误！只能填 pjh 或 hyq，请重新输入", "pjh");
-            }
-            const newUrl = `${window.location.origin}${window.location.pathname}?room=${room}&user=${myRole}`;
-            window.history.replaceState({}, "", newUrl);
-        }
-
-        // 3. 固定对方身份
-        const partnerRole = (myRole === "pjh") ? "hyq" : "pjh";
-
-        // 4. 更新界面名称
-        document.getElementById("myNameLabel").innerText = myRole;
-        document.getElementById("partnerNameLabel").innerText = partnerRole;
-
-        // ---------- 数据库路径 ----------
-        const roomRef = db.ref(`heartbeat/${room}`);
-        const myHeartbeatRef = roomRef.child(`${myRole}/lastHeartbeat`);
-        const partnerHeartbeatRef = roomRef.child(`${partnerRole}/lastHeartbeat`);
-        const myOnlineRef = roomRef.child(`${myRole}/online`);
-        const partnerOnlineRef = roomRef.child(`${partnerRole}/online`);
-
-        // ---------- 核心交互逻辑 ----------
-        // 心跳触发函数
-        function sendHeartbeat() {
-            const now = Date.now();
-            myHeartbeatRef.set(now);
-            myOnlineRef.set(true);
+        // 生日倒计时（3.24）
+        function showAnniv() {
+            const BIRTH = new Date("2026-03-24"); // 固定生日3.24
+            const now = new Date();
+            const diff = BIRTH - now;
             
-            // 本地视觉反馈
-            const myHeartEl = document.getElementById("myHeart");
-            myHeartEl.classList.add("beat");
-            setTimeout(() => myHeartEl.classList.remove("beat"), 800);
+            // 生日当天/已过显示祝福
+            if (diff <= 0) {
+                document.getElementById("anniversary").innerText = "🥳 宝贝生日快乐 · 岁岁年年";
+                return;
+            }
+            
+            const d = Math.floor(diff / 86400000);
+            document.getElementById("anniversary").innerText = `距离宝贝生日还有 ${d} 天🎂`;
+        }
+        showAnniv();
+
+        // 在线状态（极简）
+        function setOnline(v) {
+            meRef.child("online").set(v);
+            const el = document.getElementById("myStatus");
+            el.innerText = v ? "在线 ❤️" : "离线";
+            el.className = "status " + (v ? "online" : "");
+        }
+        setOnline(true);
+        window.onbeforeunload = () => setOnline(false);
+        setInterval(() => document.visibilityState === "visible" && setOnline(true), 30000);
+
+        // 对方在线状态同步
+        taRef.child("online").on("value", s => {
+            const v = s.val();
+            const el = document.getElementById("taStatus");
+            el.innerText = v ? "在线 ❤️" : "离线";
+            el.className = "status " + (v ? "online" : "");
+        });
+
+        // 心动计数（极简）
+        let myCount = 0, taCount = 0;
+        meRef.child("heart").on("value", s => {
+            myCount = s.val() || 0;
+            document.getElementById("myCount").innerText = `心动：${myCount}`;
+        });
+        taRef.child("heart").on("value", s => {
+            taCount = s.val() || 0;
+            document.getElementById("taCount").innerText = `心动：${taCount}`;
+        });
+
+        // +1 极简动画（无多余特效）
+        function plusOneAnimation(el) {
+            const span = document.createElement("div");
+            span.className = "plus-one";
+            span.innerText = "+1";
+            el.appendChild(span);
+            setTimeout(() => span.remove(), 800);
         }
 
-        // 监听对方心跳
-        partnerHeartbeatRef.on('value', (snapshot) => {
-            const timestamp = snapshot.val();
-            if (timestamp && Date.now() - timestamp < 2000) { // 防止旧数据触发
-                const partnerHeartEl = document.getElementById("partnerHeart");
-                partnerHeartEl.classList.add("beat");
-                setTimeout(() => partnerHeartEl.classList.remove("beat"), 800);
-                
-                // 手机震动提示
-                if (navigator.vibrate) navigator.vibrate(150);
-            }
+        // 点击爱心（核心交互）
+        document.getElementById("myHeart").onclick = () => {
+            // +1 动画
+            plusOneAnimation(document.getElementById("myHeart"));
+            // 同步计数
+            meRef.child("heart").set((myCount || 0) + 1);
+            meRef.child("lastBeat").set(Date.now());
+            // 心跳动画
+            const el = document.getElementById("myHeart");
+            el.classList.add("beat");
+            setTimeout(() => el.classList.remove("beat"), 300);
+        };
+
+        // 对方心跳同步
+        taRef.child("lastBeat").on("value", s => {
+            if (!s.val()) return;
+            const el = document.getElementById("taHeart");
+            el.classList.add("beat");
+            setTimeout(() => el.classList.remove("beat"), 300);
+            // 轻微震动（可选）
+            navigator.vibrate && navigator.vibrate(80);
         });
 
-        // 在线状态监听
-        partnerOnlineRef.on('value', (snapshot) => {
-            const isOnline = snapshot.val();
-            const partnerStatusEl = document.getElementById("partnerStatus");
-            if (isOnline === true) {
-                partnerStatusEl.innerText = "在线 ❤️";
-                partnerStatusEl.className = "status online";
-            } else {
-                partnerStatusEl.innerText = "离线 💔";
-                partnerStatusEl.className = "status offline";
-            }
-        });
-
-        // 保持自己在线
-        function updateMyOnline(isOnline) {
-            myOnlineRef.set(isOnline);
-            const myStatusEl = document.getElementById("myStatus");
-            if (isOnline) {
-                myStatusEl.innerText = "在线 ❤️";
-                myStatusEl.className = "status online";
-            } else {
-                myStatusEl.innerText = "离线 💔";
-                myStatusEl.className = "status offline";
-            }
-        }
-
-        // 页面加载设为在线
-        updateMyOnline(true);
-        setInterval(() => {
-            if (document.visibilityState === "visible") updateMyOnline(true);
-        }, 30000);
-
-        // 页面关闭设为离线
-        window.addEventListener("beforeunload", () => updateMyOnline(false));
-        document.addEventListener("visibilitychange", () => {
-            if (document.visibilityState === "visible") updateMyOnline(true);
-        });
-
-        // 点击爱心触发
-        document.getElementById("myHeart").addEventListener("click", sendHeartbeat);
-
-        // 摇一摇功能
-        let lastShake = 0;
-        function handleShake(event) {
-            const acceleration = event.accelerationIncludingGravity;
-            if (!acceleration) return;
-            const curTime = Date.now();
-            if ((curTime - lastShake) > 800) {
-                const magnitude = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
-                if (magnitude > 22) {
-                    lastShake = curTime;
-                    sendHeartbeat();
+        // 每日打卡（极简）
+        const today = new Date().toLocaleDateString();
+        document.getElementById("checkInBtn").onclick = () => {
+            global.child("lastCheckIn").once("value", s => {
+                if (s.val() === today) {
+                    alert("✅ 今日已打卡～");
+                    return;
                 }
-            }
-        }
-        if (window.DeviceMotionEvent) {
-            window.addEventListener("devicemotion", handleShake);
-        }
+                global.child("checkInDays").transaction(v => (v || 0) + 1);
+                global.child("lastCheckIn").set(today);
+                alert("💖 打卡成功～");
+            });
+        };
+        global.child("checkInDays").on("value", s => {
+            const v = s.val() || 0;
+            document.getElementById("checkInRecord").innerText = `累计打卡：${v} 天`;
+        });
 
-        // 摇一摇按钮触发
-        document.getElementById("shakeBtn").addEventListener("click", sendHeartbeat);
-
-    } catch (e) {
-        alert(`💔 初始化失败：${e.message}\n请检查Firebase配置是否正确`);
-        console.error("Firebase初始化错误：", e);
-    }
-</script>
+        // 极简留言
+        document.getElementById("sendMsg").onclick = () => {
+            const text = document.getElementById("msgInput").value.trim();
+            if (!text) return;
+            global.child("messages").push({
+                name: ME,
+                text: text,
+                time: Date.now()
+            });
+            document.getElementById("msgInput").value = "";
+        };
+        global.child("messages").on("child_added", s => {
+            const data = s.val();
+            const item = document.createElement("div");
+            item.className = "msg-item";
+            item.innerText = `${data.name}：${data.text}`;
+            document.getElementById("msgList").appendChild(item);
+            document.getElementById("msgList").scrollTop = 9999;
+        });
+    </script>
 </body>
 </html>
